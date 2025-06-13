@@ -1,12 +1,13 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
-  "include": ["vite.config.ts", "src/main/**/*", "src/preload/**/*"],
+  "include": ["vite.config.ts", "src/main/**/*", "src/preload/**/*","src/shared/**/*"],
   "compilerOptions": {
     "composite": true,
     "types": ["electron-vite/node"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/renderer/src/*"]
+      "@/*": ["src/main/*"],
+      "@shared/*": ["src/shared/*"]
     },
     "moduleResolution": "bundler"
   }

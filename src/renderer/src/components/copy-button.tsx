@@ -1,10 +1,10 @@
 'use client'
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckIcon, CopyIcon } from 'lucide-react'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 type ButtonProps = React.ComponentProps<typeof Button>
 
@@ -34,7 +34,7 @@ export const CopyButton = ({ text, className, ...props }: CopyButtonProps) => {
             size="icon"
             disabled={copied}
             onClick={handleCopy}
-            className={cn('disabled:opacity-100', className)}
+            className={cn('relative disabled:opacity-100', className)}
             aria-label={copied ? 'Copied' : 'Copy to clipboard'}
             {...props}
           >
@@ -57,7 +57,7 @@ export const CopyButton = ({ text, className, ...props }: CopyButtonProps) => {
           </Button>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="px-2 py-1 text-xs">
-          Copy
+          复制
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

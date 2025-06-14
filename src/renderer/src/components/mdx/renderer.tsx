@@ -2,6 +2,7 @@
 
 import { cn } from '@/lib/utils'
 import 'katex/dist/katex.min.css'
+import '@/assets/mdx-renderer.css'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import '@/assets/github-markdown.css'

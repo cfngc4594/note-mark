@@ -4,7 +4,7 @@ import { HomeLayout } from '@/modules/home/ui/layouts/home-layout'
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <HomeLayout>
         <HomeView />
       </HomeLayout>

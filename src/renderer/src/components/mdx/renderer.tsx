@@ -7,11 +7,11 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import '@/assets/github-markdown.css'
 import rehypeKatex from 'rehype-katex'
-import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import rehypePretty from 'rehype-pretty-code'
 import { CircleAlertIcon } from 'lucide-react'
 import { serialize } from 'next-mdx-remote/serialize'
+import { useTheme } from '@/components/theme-provider'
 import { MDXRemote, type MDXRemoteSerializeResult } from 'next-mdx-remote'
 import { mdxComponents, type MDXComponents } from '@/components/mdx/components/mdx-components'
 
@@ -26,8 +26,8 @@ export const MdxRenderer = ({
   components = mdxComponents,
   className
 }: MdxRendererProps) => {
-  const { resolvedTheme } = useTheme()
-  const theme = resolvedTheme === 'light' ? 'vitesse-light' : 'vitesse-dark'
+  const { theme } = useTheme()
+  const rehypeTheme = theme === 'light' ? 'vitesse-light' : 'vitesse-dark'
   const [serializedSource, setSerializedSource] = useState<MDXRemoteSerializeResult | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -37,7 +37,10 @@ export const MdxRenderer = ({
         const serializedSource = await serialize(source, {
           mdxOptions: {
             remarkPlugins: [remarkGfm, remarkMath],
-            rehypePlugins: [rehypeKatex, [rehypePretty, { theme: theme, keepBackground: false }]]
+            rehypePlugins: [
+              rehypeKatex,
+              [rehypePretty, { theme: rehypeTheme, keepBackground: false }]
+            ]
           }
         })
         setSerializedSource(serializedSource)
@@ -48,7 +51,7 @@ export const MdxRenderer = ({
     }
     setError(null)
     serializeSource()
-  }, [resolvedTheme, source, theme])
+  }, [rehypeTheme, source])
 
   if (error) {
     return (

@@ -1,5 +1,4 @@
-import { MdxRenderer } from '../mdx/renderer'
-import { ScrollArea } from '../ui/scroll-area'
+import { MdxRenderer } from '@/components/mdx/renderer'
 
 export const ChatMessageList = () => {
   const source = `# Judge4c 题目描述编辑界面
@@ -135,13 +134,5 @@ Judge4c 支持 GFM (GitHub Flavored Markdown) 语法，包括以下功能:
 |  Nextjs  | NGC2207  | Judge4c  |
 `
 
-  return (
-    <div className="flex-1 p-4">
-      <ScrollArea>
-        {/* messages list */}
-        <MdxRenderer source={source} />
-      </ScrollArea>
-      {/* status */}
-    </div>
-  )
+  return <MdxRenderer source={source} className="py-4" />
 }

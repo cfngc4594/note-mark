@@ -76,7 +76,7 @@ public class HelloWorld {
 - 普通内联代码：\`print("Hello, World!")\`
 
 ### 支持语法高亮
-为了支持代码高亮，可以在内联代码结尾使用扩展语法\`\{:language}\`，其中 \`language\` 是编程语言的名称。例如：
+为了支持代码高亮，可以在内联代码结尾使用扩展语法\`\\{:language}\`，其中 \`language\` 是编程语言的名称。例如：
 - Java 代码：\`System.out.println("Hello, World!");{:java}\`
 - Python 代码：\`print("Hello, World!"){:python}\`
 

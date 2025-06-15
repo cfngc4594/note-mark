@@ -1,5 +1,5 @@
-import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
-import { MainSection } from "@/modules/home/ui/components/home-sidebar/main-section";
+import { Sidebar, SidebarContent } from '@/components/ui/sidebar'
+import { MainSection } from '@/modules/home/ui/components/home-sidebar/main-section'
 
 export const HomeSidebar = () => {
   return (
@@ -8,5 +8,5 @@ export const HomeSidebar = () => {
         <MainSection />
       </SidebarContent>
     </Sidebar>
-  );
-};
+  )
+}

@@ -1,7 +1,9 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import { router } from '@shared/api'
 import icon from '../../resources/icon.png?asset'
+import { app, shell, BrowserWindow } from 'electron'
+import { createIPCHandler } from 'electron-trpc-experimental/main'
+import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 
 function createWindow(): void {
   // Create the browser window.
@@ -19,6 +21,8 @@ function createWindow(): void {
       sandbox: false
     }
   })
+
+  createIPCHandler({ router, windows: [mainWindow] })
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -51,9 +55,6 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
-
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
 

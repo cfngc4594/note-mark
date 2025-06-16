@@ -7,7 +7,7 @@ import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 
 export const queryClient = new QueryClient()
 
-const trpcClient = createTRPCClient<AppRouter>({
+export const trpcClient = createTRPCClient<AppRouter>({
   links: [ipcLink({ transformer: superjson })]
 })
 

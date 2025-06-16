@@ -21,6 +21,7 @@
     "build:linux": "electron-vite --config ./vite.config.ts build && electron-builder --linux"
   },
   "dependencies": {
+    "@ai-sdk/deepseek": "^0.2.14",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^4.0.0",
     "@hookform/resolvers": "^5.1.1",
@@ -55,10 +56,12 @@
     "@trpc/client": "^11.3.1",
     "@trpc/server": "^11.3.1",
     "@trpc/tanstack-react-query": "^11.3.1",
+    "ai": "^4.3.16",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
+    "dotenv": "^16.5.0",
     "electron-trpc-experimental": "^1.0.0-alpha.0",
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",

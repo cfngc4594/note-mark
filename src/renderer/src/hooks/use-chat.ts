@@ -36,15 +36,10 @@ export const useChat = () => {
         {
           onStarted: () => {},
           onData: (value) => {
-            setStatus('streaming')
             setMessages((prev) => {
               const lastMessage = prev[prev.length - 1]
-              if (lastMessage.role === 'assistant') {
-                return [
-                  ...prev.slice(0, -1),
-                  { ...lastMessage, content: lastMessage.content + value }
-                ]
-              } else {
+              if (lastMessage.role === 'user') {
+                setStatus('streaming')
                 return [
                   ...prev,
                   {
@@ -52,6 +47,11 @@ export const useChat = () => {
                     role: 'assistant',
                     content: value
                   }
+                ]
+              } else {
+                return [
+                  ...prev.slice(0, -1),
+                  { ...lastMessage, content: lastMessage.content + value }
                 ]
               }
             })

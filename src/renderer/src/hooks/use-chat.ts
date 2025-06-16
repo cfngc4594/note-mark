@@ -1,15 +1,29 @@
-import { useState } from 'react'
 import { trpcClient } from '@/lib/trpc'
+import { useEffect, useRef, useState } from 'react'
 import { ChatMessage, ChatStatus } from '@shared/type'
+import { Unsubscribable } from '@trpc/server/observable'
 
 export const useChat = () => {
   const [input, setInput] = useState<string>('')
   const [status, setStatus] = useState<ChatStatus>('ready')
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [error, setError] = useState<Error | null>(null)
+  const subscriptionRef = useRef<Unsubscribable | null>(null)
 
-  const handleInputChange = (value: string) => {
-    setInput(value)
+  useEffect(() => {
+    return () => {
+      subscriptionRef.current?.unsubscribe()
+    }
+  }, [])
+
+  const stop = () => {
+    subscriptionRef.current?.unsubscribe()
+  }
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setInput(e.target.value)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -31,10 +45,9 @@ export const useChat = () => {
       setMessages(newMessages)
       setInput('')
 
-      const subscription = trpcClient.chat.subscribe(
+      subscriptionRef.current = trpcClient.chat.subscribe(
         { messages: newMessages },
         {
-          onStarted: () => {},
           onData: (value) => {
             setMessages((prev) => {
               const lastMessage = prev[prev.length - 1]
@@ -59,18 +72,14 @@ export const useChat = () => {
           onError: (error) => {
             setError(error)
             setStatus('error')
+            subscriptionRef.current = null
           },
-          onStopped: () => {},
           onComplete: () => {
             setStatus('ready')
-          },
-          onConnectionStateChange: () => {}
+            subscriptionRef.current = null
+          }
         }
       )
-
-      return () => {
-        subscription.unsubscribe()
-      }
     } catch (error) {
       setError(error instanceof Error ? error : new Error('An unknown error occurred'))
       setStatus('error')
@@ -85,6 +94,7 @@ export const useChat = () => {
     messages,
     setMessages,
     error,
-    handleSubmit
+    handleSubmit,
+    stop
   }
 }

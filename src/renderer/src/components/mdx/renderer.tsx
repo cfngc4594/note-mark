@@ -34,6 +34,7 @@ export const MdxRenderer = ({
   useEffect(() => {
     const serializeSource = async () => {
       try {
+        setError(null)
         const serializedSource = await serialize(source, {
           mdxOptions: {
             remarkPlugins: [remarkGfm, remarkMath],
@@ -45,11 +46,11 @@ export const MdxRenderer = ({
         })
         setSerializedSource(serializedSource)
       } catch (error) {
+        setSerializedSource(null)
         console.error('Error serializing MDX source:', error)
         setError('Failed to render content. Please try again later.')
       }
     }
-    setError(null)
     serializeSource()
   }, [rehypeTheme, source])
 

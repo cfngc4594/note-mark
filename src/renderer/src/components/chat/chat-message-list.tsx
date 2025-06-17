@@ -19,13 +19,13 @@ export const ChatMessageList = ({ messages, status }: ChatMessageListProps) => {
   return (
     <div className="flex-1 overflow-y-auto">
       <ScrollArea className="h-full">
-        <div className="container p-4 mx-auto">
+        <div className="container p-4 mx-auto space-y-4">
           {messages.map((message) => (
             <ChatBubble key={message.id} message={message} />
           ))}
           <StatusIcon status={status} type="indicator" />
-          <div ref={scrollAreaRef} />
         </div>
+        <div ref={scrollAreaRef} />
       </ScrollArea>
     </div>
   )

@@ -3,7 +3,7 @@ import { ChatInputForm } from '@/components/chat/chat-input-form'
 import { ChatMessageList } from '@/components/chat/chat-message-list'
 
 export const ChatView = () => {
-  const { input, handleInputChange, status, messages, handleSubmit, stop } = useChat()
+  const { input, handleInputChange, status, messages, handleSubmit, stop, reload } = useChat()
 
   return (
     <div className="h-full flex flex-col">
@@ -14,6 +14,7 @@ export const ChatView = () => {
         handleInputChange={handleInputChange}
         handleSubmit={handleSubmit}
         stop={stop}
+        reload={reload}
       />
     </div>
   )

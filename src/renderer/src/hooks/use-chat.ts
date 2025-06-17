@@ -7,52 +7,33 @@ export const useChat = () => {
   const [input, setInput] = useState<string>('')
   const [status, setStatus] = useState<ChatStatus>('ready')
   const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [error, setError] = useState<Error | null>(null)
   const subscriptionRef = useRef<Unsubscribable | null>(null)
+
+  const clearSubscription = () => {
+    if (subscriptionRef.current) {
+      subscriptionRef.current.unsubscribe()
+      subscriptionRef.current = null
+    }
+  }
 
   useEffect(() => {
     return () => {
-      subscriptionRef.current?.unsubscribe()
+      clearSubscription()
     }
   }, [])
 
-  const stop = () => {
-    subscriptionRef.current?.unsubscribe()
-  }
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setInput(e.target.value)
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!input.trim() || status === 'streaming' || status === 'submitted') return
-
+  const streamChat = (messages: ChatMessage[]) => {
     try {
       setStatus('submitted')
-      setError(null)
-
-      const userMessage: ChatMessage = {
-        id: Date.now().toString(),
-        role: 'user',
-        content: input
-      }
-
-      const newMessages = [...messages, userMessage]
-
-      setMessages(newMessages)
-      setInput('')
 
       subscriptionRef.current = trpcClient.chat.subscribe(
-        { messages: newMessages },
+        { messages },
         {
           onData: (value) => {
+            if (status !== 'streaming') setStatus('streaming')
             setMessages((prev) => {
               const lastMessage = prev[prev.length - 1]
               if (lastMessage.role === 'user') {
-                setStatus('streaming')
                 return [
                   ...prev,
                   {
@@ -70,21 +51,53 @@ export const useChat = () => {
             })
           },
           onError: (error) => {
-            setError(error)
+            console.error(error)
             setStatus('error')
-            subscriptionRef.current = null
+            clearSubscription()
           },
           onComplete: () => {
             setStatus('ready')
-            subscriptionRef.current = null
+            clearSubscription()
           }
         }
       )
     } catch (error) {
-      setError(error instanceof Error ? error : new Error('An unknown error occurred'))
+      console.error(error)
       setStatus('error')
-      return
+      clearSubscription()
     }
+  }
+
+  const reload = () => {
+    if (!(status === 'error')) return
+    streamChat(messages)
+  }
+
+  const stop = () => {
+    clearSubscription()
+  }
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setInput(e.target.value)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!input.trim() || status !== 'ready') return
+
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input
+    }
+    const newMessages = [...messages, userMessage]
+
+    setInput('')
+    setMessages(newMessages)
+
+    streamChat(newMessages)
   }
 
   return {
@@ -93,8 +106,8 @@ export const useChat = () => {
     status,
     messages,
     setMessages,
-    error,
     handleSubmit,
-    stop
+    stop,
+    reload
   }
 }

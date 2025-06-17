@@ -1,7 +1,7 @@
 import { ChatStatus } from '@shared/type'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { ArrowUpIcon, RotateCcwIcon, StopCircleIcon } from 'lucide-react'
+import { StatusIcon } from '@/components/status-icon'
 
 interface ChatInputFormProps {
   input: string
@@ -11,6 +11,7 @@ interface ChatInputFormProps {
   ) => void
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   stop: () => void
+  reload: () => void
 }
 
 export const ChatInputForm = ({
@@ -18,8 +19,17 @@ export const ChatInputForm = ({
   status,
   handleInputChange,
   handleSubmit,
-  stop
+  stop,
+  reload
 }: ChatInputFormProps) => {
+  const handleClick = () => {
+    if (status === 'error') {
+      reload()
+    } else if (status === 'streaming' || status === 'submitted') {
+      stop()
+    }
+  }
+
   return (
     <footer className="container mx-auto px-4 pb-4">
       <form onSubmit={handleSubmit} className="flex flex-col p-2.5 bg-input/30 border rounded-2xl">
@@ -34,18 +44,10 @@ export const ChatInputForm = ({
             variant="outline"
             type={status === 'ready' ? 'submit' : 'button'}
             disabled={status === 'ready' && !input.trim()}
-            onClick={() => {
-              if (status === 'streaming' || status === 'submitted') {
-                stop()
-              }
-            }}
+            onClick={handleClick}
             className="size-8 rounded-full cursor-pointer"
           >
-            {status === 'ready' && <ArrowUpIcon size={16} aria-hidden="true" />}
-            {status === 'error' && <RotateCcwIcon size={16} aria-hidden="true" />}
-            {(status === 'streaming' || status === 'submitted') && (
-              <StopCircleIcon size={16} aria-hidden="true" />
-            )}
+            <StatusIcon status={status} type="button" />
           </Button>
         </div>
       </form>
